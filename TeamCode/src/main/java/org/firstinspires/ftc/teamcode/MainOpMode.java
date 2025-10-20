@@ -13,6 +13,7 @@ public class MainOpMode extends OpMode {
 
     ArcadeDriveSys driveSys = new ArcadeDriveSys();
     ShooterSys shooterSys = new ShooterSys();
+    IntakeSys intakeSys = new IntakeSys();
 
 
     double foward, rotate, strafe;
@@ -21,13 +22,14 @@ public class MainOpMode extends OpMode {
     public void init() {
         driveSys.init(hardwareMap);
         shooterSys.init(hardwareMap);
+        intakeSys.init(hardwareMap);
 
 
     }
 
     public void loop(){
 
-
+        telemetry.addData("robotYaw",driveSys.getYaw());
         foward = gamepad1.left_stick_y;
         strafe = gamepad1.left_stick_x;
         rotate = gamepad1.right_stick_x;
@@ -38,22 +40,44 @@ public class MainOpMode extends OpMode {
             driveSys.ResetPose();
         }
 
-        if(gamepad1.a){
-            shooterSys.AdjustPower(-0.005);
-            telemetry.addData("shooter power", ShooterSys.shooterPower);
-        }
-        if(gamepad1.y){
-            shooterSys.AdjustPower(0.005);
-            telemetry.addData("shooter power", ShooterSys.shooterPower);
-        }
-        if(gamepad1.right_trigger > 0.5){
-            shooterSys.EnableShoot();
-            telemetry.addData("shooter power", ShooterSys.shooterPower);
 
-        }else{
-            shooterSys.DisableShoot();
+
+
+        if (gamepad1.a) {
+            shooterSys.setHoodState(ShooterSys.HoodState.STOWED);
+            shooterSys.setShooterPower(Constants.CLOSE_SHOT_POWER);
+        }
+        else if (gamepad1.x) {
+            shooterSys.setHoodState(ShooterSys.HoodState.MID);
+            shooterSys.setShooterPower(Constants.MID_SHOT_POWER);
+        }
+        else if (gamepad1.y) {
+            shooterSys.setHoodState(ShooterSys.HoodState.FAR);
+            shooterSys.setShooterPower(Constants.FAR_SHOT_POWER);
+        }
+        else {
+            shooterSys.setShooterPower(0);
         }
 
+        // Call this every loop to handle timed hood movement
+        shooterSys.updateHood();
+
+        telemetry.addData("Hood Pos", shooterSys.getCurrentHoodPos());
+        telemetry.addData("Is Moving", shooterSys.getIsMoving());
+        telemetry.update();
+
+
+        // intake control
+
+        if (gamepad1.right_trigger > 0.5){
+            intakeSys.setIndexerPower(0.8);
+            intakeSys.setIntakePower(Constants.INTAKE_POWER);
+        }
+        else{
+            intakeSys.setIndexerPower(0);
+            intakeSys.setIntakePower(0);
+        }
 
     }
 }
+

@@ -41,8 +41,8 @@ public class ArcadeDriveSys {
         imu = hwmap.get(IMU.class, "imu");
 
         RevHubOrientationOnRobot HubOrientation = new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         );
 
         imu.initialize(new IMU.Parameters(HubOrientation));
@@ -85,4 +85,10 @@ public class ArcadeDriveSys {
     public void ResetPose(){
         imu.resetYaw();
     }
+    public double getYaw(){
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    }
+
 }
+
+
