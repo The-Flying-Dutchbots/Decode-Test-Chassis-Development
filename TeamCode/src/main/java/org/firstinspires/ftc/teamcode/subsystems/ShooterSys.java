@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.opencv.objdetect.HOGDescriptor;
 
 public class ShooterSys {
 
@@ -48,7 +49,23 @@ public class ShooterSys {
     public void setShooterPower(double shooterPower){
         shooterMotor.setPower(shooterPower);
     }
+    public void startShooting(){
+        if(currentHoodState == HoodState.STOWED){
+            setShooterPower(Constants.CLOSE_SHOT_POWER);
+        }
+        else if(currentHoodState == HoodState.MID){
+            setShooterPower(Constants.MID_SHOT_POWER);
+        }
+        else if(currentHoodState == HoodState.FAR){
+            setShooterPower(Constants.FAR_SHOT_POWER);
+        }
 
+
+    }
+
+    public void stopShooting(){
+        setShooterPower(0);
+    }
 //begining of the hood control
     public void setHoodState(HoodState newState) {
         if (!isMoving && newState != currentHoodState) {
@@ -71,7 +88,7 @@ public class ShooterSys {
                 moveTime = Constants.MOVE_TIME_STOWED_TO_MID;
             } else if (targetHoodState == HoodState.FAR) {
                 power = Constants.HOOD_UP_POWER;
-                moveTime = Constants.MOVE_TIME_STOWED_TO_FAR; // sequential time
+                moveTime = Constants.MOVE_TIME_STOWED_TO_FAR;
             }
         } else if (currentHoodState == HoodState.MID) {
             if (targetHoodState == HoodState.STOWED) {
@@ -103,6 +120,10 @@ public class ShooterSys {
 
     public HoodState getCurrentHoodPos() { return currentHoodState; }
     public boolean getIsMoving() { return isMoving; }
+
+    public HoodState getCurrentHoodState(){
+        return  currentHoodState;
+    }
 
 
 }
