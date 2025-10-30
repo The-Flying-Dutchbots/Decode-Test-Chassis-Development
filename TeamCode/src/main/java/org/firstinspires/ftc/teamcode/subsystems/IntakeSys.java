@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
@@ -15,6 +16,7 @@ public class IntakeSys {
     DcMotor intakeMotor;
 
     DigitalChannel touchOne,touchTwo;
+    private ElapsedTime touchTimer = new ElapsedTime();
 
     public void init(HardwareMap hwmap){
 
@@ -41,8 +43,10 @@ public void intakeStart(){
 
     if (isWaiting) {
         indexerServo.setPower(Constants.INDEXER_INTAKE_POWER);
-    }
-    else{
+        touchTimer.reset();
+    } else if(touchTimer.seconds() <= Constants.TOUCH_SENSOR_TIMER) {
+        indexerServo.setPower(Constants.INDEXER_INTAKE_POWER);
+    } else{
        indexerServo.setPower(0);
     }
 

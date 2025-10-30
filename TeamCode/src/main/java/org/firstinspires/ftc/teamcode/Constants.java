@@ -26,6 +26,7 @@ public class Constants {
 
    public static final double INDEXER_STOW_POWER = 0.5;
    public static final double INDEXER_INTAKE_POWER = 0.8;
+   public static final double TOUCH_SENSOR_TIMER =0.5;
 
    public static final double CLIMBER_MANUAL_POWER = 1.0;
 
