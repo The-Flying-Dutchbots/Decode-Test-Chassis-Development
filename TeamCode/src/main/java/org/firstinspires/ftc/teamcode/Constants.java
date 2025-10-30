@@ -32,4 +32,5 @@ public class Constants {
 
    public static final double ENCODER_TICKS_PER_INCH = 50;
    public static final double TICKS_PER_DEGREE = 9;
+   public static final double TESTTEST = 9.0;
 }
