@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import androidx.annotation.Nullable;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,7 +17,7 @@ public class IntakeSys {
     CRServo indexerServo;
     DcMotor intakeMotor;
 
-    DigitalChannel touchOne,touchTwo;
+    DigitalChannel touchOne,touchTwo,beamBreak;
     private ElapsedTime touchTimer = new ElapsedTime();
 
     public void init(HardwareMap hwmap){
@@ -35,13 +37,18 @@ public class IntakeSys {
         touchTwo = hwmap.get(DigitalChannel.class, "touch_two");
         touchOne.setMode(DigitalChannel.Mode.INPUT);
         touchTwo.setMode(DigitalChannel.Mode.INPUT);
+
+        beamBreak = hwmap.get(DigitalChannel.class, "beam_break");
+        beamBreak.setMode(DigitalChannel.Mode.INPUT);
     }
 public void intakeStart(){
         boolean isWaiting = ((!touchOne.getState()) || (!touchTwo.getState()));
-    intakeMotor.setPower(Constants.INTAKE_POWER);
-    //indexerServo.setPower(0.1);
+        boolean beamBreak_broken = !beamBreak.getState();
 
-    if (isWaiting) {
+    intakeMotor.setPower(Constants.INTAKE_POWER);
+   if(beamBreak_broken){
+       indexerServo.setPower(0);
+   } else if (isWaiting) {
         indexerServo.setPower(Constants.INDEXER_INTAKE_POWER);
         touchTimer.reset();
     } else if(touchTimer.seconds() <= Constants.TOUCH_SENSOR_TIMER) {
@@ -58,7 +65,12 @@ public boolean getTouchOne(){
         return touchTwo.getState();
     }
 
-public void indexerStart(){
+
+    public boolean getBeamBreak() {
+        return beamBreak.getState();
+    }
+
+    public void indexerStart(){
         indexerServo.setPower(Constants.INDEXER_INTAKE_POWER);
 }
 public void indexerStop(){
@@ -69,20 +81,19 @@ public void indexerReverse(){
 }
 public void shootStart(){
         intakeMotor.setPower(Constants.INTAKE_POWER);
-        indexerServo.setPower(Constants.INDEXER_INTAKE_POWER);
-}public void shootStop(){
-        intakeMotor.setPower(0);
-        indexerServo.setPower(0);
+        indexerServo.setPower(Constants.INDEXER_SHOOT_POWER);
+    }
+    public void setIntakePower(double power){
+        intakeMotor.setPower(power);
     }
 public void intakeStop(){
         intakeMotor.setPower(0);
         indexerServo.setPower(0);
 }
+public void intakeReverse(){
+        intakeMotor.setPower(-0.3);
+        indexerServo.setPower(-0.8);
+}
 
-    public void setIndexerPower(double power){
-        indexerServo.setPower(power);
-    }
-    public void setIntakePower(double power){
-        intakeMotor.setPower(power);
-    }
+
 }

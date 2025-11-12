@@ -34,7 +34,7 @@ public class ClimberSys {
     }
 
     public void manualMoveClimbersUp(){
-if(getClimberPositionAvg() < 15500) {
+if(getClimberPositionAvg() < 15800) {
     leftClimberMotor.setPower(Constants.CLIMBER_MANUAL_POWER);
     rightClimberMotor.setPower(Constants.CLIMBER_MANUAL_POWER);
 }else{
@@ -43,7 +43,7 @@ if(getClimberPositionAvg() < 15500) {
 }
     }
     public void manualMoveClimbersDown(){
-if(getClimberPositionAvg() > 25) {
+if(getClimberPositionAvg() > 100) {
     leftClimberMotor.setPower(-Constants.CLIMBER_MANUAL_POWER);
     rightClimberMotor.setPower(-Constants.CLIMBER_MANUAL_POWER);
 }
@@ -56,6 +56,14 @@ else{
 
         leftClimberMotor.setPower(0);
         rightClimberMotor.setPower(0);
+    }
+    public void manualMoveClimbersUpOveride(){
+            leftClimberMotor.setPower(Constants.CLIMBER_MANUAL_POWER);
+            rightClimberMotor.setPower(Constants.CLIMBER_MANUAL_POWER);
+    }
+    public void manualMoveClimbersDownOveride(){
+            leftClimberMotor.setPower(-Constants.CLIMBER_MANUAL_POWER);
+            rightClimberMotor.setPower(-Constants.CLIMBER_MANUAL_POWER);
     }
     public int getLeftClimberPosition(){
         return leftClimberMotor.getCurrentPosition();

@@ -68,7 +68,10 @@ public class ArcadeDriveSys {
         RR_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FR_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
+        FL_motor.setTargetPosition(0);
+        FR_motor.setTargetPosition(0);
+        RR_motor.setTargetPosition(0);
+        RL_motor.setTargetPosition(0);
 
         FL_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RL_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -197,6 +200,23 @@ public class ArcadeDriveSys {
         double newStrafe = r * Math.sin(theta);
 
         this.RobotOrientedDrive(newFoward, newStrafe, rotate);
+    }
+
+    public double getTurnPowerToHeading(double targetAngle) {
+        double currentAngle = getYaw();
+        double error = targetAngle - currentAngle;
+
+        // Normalize error to -180..180
+        error = (error + 540) % 360 - 180;
+
+        // Proportional control
+        double kP = 0.01; // Tune this
+        double turnPower = kP * error;
+
+        // Clamp power
+        turnPower = Math.max(-0.5, Math.min(0.5, turnPower));
+
+        return turnPower;
     }
 
     public void ResetPose(){

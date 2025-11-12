@@ -41,25 +41,25 @@ public class MainOpMode extends OpMode {
         foward = gamepad1.left_stick_y;
         strafe = gamepad1.left_stick_x;
 
-
-        if (gamepad1.b){
-            if(robotAngle >= Constants.AUTO_AIM_RED_LEFT_TOLERANCE){
-                rotate = Constants.AUTO_AIM_ROTATE_RIGHT_POWER;
-            } else if (robotAngle <= Constants.AUTO_AIM_RED_RIGHT_TOLERANCE) {
-                rotate = Constants.AUTO_AIM_ROTATE_LEFT_POWER;
+        if(gamepad1.x) {// Face forward
+            if(shooterSys.getCurrentHoodPos() == ShooterSys.HoodState.FAR){
+                rotate = driveSys.getTurnPowerToHeading(157.5);
             }
-        } else if (gamepad1.x) {
-            if(robotAngle >= Constants.AUTO_AIM_BLUE_RIGHT_TOLERANCE){
-                rotate = Constants.AUTO_AIM_ROTATE_RIGHT_POWER;
-            } else if (robotAngle <= Constants.AUTO_AIM_BLUE_RIGHT_TOLERANCE) {
-                rotate = Constants.AUTO_AIM_ROTATE_LEFT_POWER;
+            else {
+                rotate = driveSys.getTurnPowerToHeading(135);
             }
 
-
-        } else {
+        } else if(gamepad1.b) {    // Face right
+            if(shooterSys.getCurrentHoodPos() == ShooterSys.HoodState.FAR){
+                rotate = driveSys.getTurnPowerToHeading(67.5);
+            }
+            else {
+                rotate = driveSys.getTurnPowerToHeading(45);
+            }
+        }else {
+            // Normal manual turning
             rotate = gamepad1.right_stick_x;
         }
-
 
         driveSys.FieldOrientedDrive(foward, strafe, rotate);
 
@@ -94,6 +94,10 @@ public class MainOpMode extends OpMode {
             intakeSys.intakeStart();
             shooterSys.stopShooting();
             isShooting = false;
+        }else if(gamepad1.left_trigger > 0.5){
+            intakeSys.intakeReverse();
+            shooterSys.setShooterPower(-0.5);
+
         }else{
           intakeSys.intakeStop();
           shooterSys.stopShooting();
@@ -140,6 +144,7 @@ public class MainOpMode extends OpMode {
 
         telemetry.addData("Touch One",intakeSys.getTouchOne());
         telemetry.addData("Touch Two",intakeSys.getTouchTwo());
+        telemetry.addData("Beam Break", intakeSys.getBeamBreak());
         telemetry.update();
 
 
