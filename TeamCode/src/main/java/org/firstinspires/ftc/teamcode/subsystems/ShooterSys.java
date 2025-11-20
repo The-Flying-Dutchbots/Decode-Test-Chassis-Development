@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,6 +21,7 @@ public class ShooterSys {
     boolean isMoving;
 
     DcMotor shooterMotor;
+    //DcMotorEx shooterMtr;
     CRServo hoodServo;
 
 
@@ -41,6 +43,12 @@ public class ShooterSys {
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooterMotor.setDirection(DcMotor.Direction.REVERSE);
 
+//shooter conversion to rpm controller begins here
+     /*   shooterMtr = hwmap.get(DcMotorEx.class, "INSERT NAME?");
+        shooterMtr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMtr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMtr.setVelocityPIDFCoefficients(0,0,0,0);*/
+
         hoodServo = hwmap.get(CRServo.class, "hood_servo");
         hoodServo.setDirection(CRServo.Direction.FORWARD);
 
@@ -51,10 +59,12 @@ public class ShooterSys {
     public void setShooterPower(double shooterPower){
         shooterMotor.setPower(shooterPower);
 
+
     }
     public void startShooting(){
         if(currentHoodState == HoodState.STOWED){
             setShooterPower(Constants.CLOSE_SHOT_POWER);
+
         }
         else if(currentHoodState == HoodState.MID){
             setShooterPower(Constants.MID_SHOT_POWER);
