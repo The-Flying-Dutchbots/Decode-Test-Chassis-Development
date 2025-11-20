@@ -8,10 +8,11 @@ import org.firstinspires.ftc.teamcode.subsystems.ArcadeDriveSys;
 import org.firstinspires.ftc.teamcode.subsystems.ClimberSys;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSys;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSys;
+import org.firstinspires.ftc.teamcode.subsystems.VisionSys;
 
 @TeleOp
 public class MainOpMode extends OpMode {
-
+    VisionSys visionSys = new VisionSys();
     ArcadeDriveSys driveSys = new ArcadeDriveSys();
     ShooterSys shooterSys = new ShooterSys();
     IntakeSys intakeSys = new IntakeSys();
@@ -27,19 +28,24 @@ public class MainOpMode extends OpMode {
         shooterSys.init(hardwareMap);
         intakeSys.init(hardwareMap);
         climberSys.init(hardwareMap);
+        visionSys.init(hardwareMap);
 
 
     }
 
     public void loop(){
+
+        telemetry.addData("limelight ID seen:", visionSys.getTagID());
     //Drive chassis controls Telemetry and data
+
+
 
         double robotAngle = driveSys.getYaw();
 
 
         telemetry.addData("robotYaw",driveSys.getYaw());
         foward = gamepad1.left_stick_y;
-        strafe = gamepad1.left_stick_x;
+        strafe = -gamepad1.left_stick_x;
 
         if(gamepad1.x) {// Face forward
             if(shooterSys.getCurrentHoodPos() == ShooterSys.HoodState.FAR){
@@ -58,7 +64,7 @@ public class MainOpMode extends OpMode {
             }
         }else {
             // Normal manual turning
-            rotate = gamepad1.right_stick_x;
+            rotate = -gamepad1.right_stick_x;
         }
 
         driveSys.FieldOrientedDrive(foward, strafe, rotate);

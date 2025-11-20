@@ -21,10 +21,10 @@ public class ArcadeDriveSys {
     public void init(HardwareMap hwmap){
 
         // initializing the drive chassis motors with the Driver Hub Config. file
-        FL_motor = hwmap.get(DcMotor.class, "RF_drive_motor");
-        RL_motor = hwmap.get(DcMotor.class, "RR_drive_motor");
-        RR_motor = hwmap.get(DcMotor.class, "LF_drive_motor");
-        FR_motor = hwmap.get(DcMotor.class, "LR_drive_motor");
+        FR_motor = hwmap.get(DcMotor.class, "FR_drive_motor"); //port 0
+        RR_motor = hwmap.get(DcMotor.class, "RR_drive_motor"); //port 1
+        FL_motor = hwmap.get(DcMotor.class, "FL_drive_motor"); //port 2
+        RL_motor = hwmap.get(DcMotor.class, "RL_drive_motor"); //port 3
 
 
 
@@ -35,8 +35,8 @@ public class ArcadeDriveSys {
 
         FL_motor.setDirection(DcMotor.Direction.REVERSE);
         RL_motor.setDirection(DcMotor.Direction.REVERSE);
-        RR_motor.setDirection(DcMotor.Direction.REVERSE);
-        FR_motor.setDirection(DcMotor.Direction.REVERSE);
+        RR_motor.setDirection(DcMotor.Direction.FORWARD);
+        FR_motor.setDirection(DcMotor.Direction.FORWARD);
 
         FL_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RL_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -58,10 +58,10 @@ public class ArcadeDriveSys {
     public void autoInit(HardwareMap hwmap){
 
         // initializing the drive chassis motors with the Driver Hub Config. file
-        FL_motor = hwmap.get(DcMotor.class, "RF_drive_motor");
-        RL_motor = hwmap.get(DcMotor.class, "RR_drive_motor");
-        RR_motor = hwmap.get(DcMotor.class, "LF_drive_motor");
-        FR_motor = hwmap.get(DcMotor.class, "LR_drive_motor");
+        FR_motor = hwmap.get(DcMotor.class, "FR_drive_motor"); //port 0
+        RR_motor = hwmap.get(DcMotor.class, "RR_drive_motor"); //port 1
+        FL_motor = hwmap.get(DcMotor.class, "FL_drive_motor"); //port 2
+        RL_motor = hwmap.get(DcMotor.class, "RL_drive_motor"); //port 3
 
         FL_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RL_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -80,8 +80,8 @@ public class ArcadeDriveSys {
 
         FL_motor.setDirection(DcMotor.Direction.REVERSE);
         RL_motor.setDirection(DcMotor.Direction.REVERSE);
-        RR_motor.setDirection(DcMotor.Direction.REVERSE);
-        FR_motor.setDirection(DcMotor.Direction.REVERSE);
+        RR_motor.setDirection(DcMotor.Direction.FORWARD);
+        FR_motor.setDirection(DcMotor.Direction.FORWARD);
 
         FL_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RL_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -171,8 +171,8 @@ public class ArcadeDriveSys {
     public void RobotOrientedDrive(double foward, double strafe, double rotate){
         double FL_Power = foward + strafe + rotate;
         double RL_Power = foward - strafe + rotate;
-        double RR_Power = foward - strafe - rotate;
-        double FR_Power = foward + strafe - rotate;
+        double FR_Power = foward - strafe - rotate;
+        double RR_Power = foward + strafe - rotate;
 
         double maxPower = 1.0;
         double maxSpeed = 1.0;
@@ -191,15 +191,17 @@ public class ArcadeDriveSys {
     }
 
     public void FieldOrientedDrive(double foward, double strafe, double rotate){
-        double theta = Math.atan2(strafe, foward);
+        double theta = Math.atan2(foward, strafe);
         double r = Math.hypot(strafe, foward);
 
         theta = AngleUnit.normalizeRadians(theta - imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
 
-        double newFoward = r * Math.cos(theta);
-        double newStrafe = r * Math.sin(theta);
+        double newFoward = r * Math.sin(theta);
+        double newStrafe = r * Math.cos(theta);
 
         this.RobotOrientedDrive(newFoward, newStrafe, rotate);
+
+
     }
 
     public double getTurnPowerToHeading(double targetAngle) {

@@ -23,6 +23,7 @@ public class ShooterSys {
     CRServo hoodServo;
 
 
+
     private HoodState currentHoodState = HoodState.STOWED;
     private HoodState targetHoodState = HoodState.STOWED; // desired hood position
 
@@ -49,6 +50,7 @@ public class ShooterSys {
 
     public void setShooterPower(double shooterPower){
         shooterMotor.setPower(shooterPower);
+
     }
     public void startShooting(){
         if(currentHoodState == HoodState.STOWED){
